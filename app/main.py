@@ -6,7 +6,7 @@ from .init_db import init_db
 
 app = FastAPI(title="Anganwadi Early Screening API", version="0.1.0")
 
-# ✅ CORS MUST BE FIRST MIDDLEWARE
+# ✅ CORS MUST COME BEFORE ROUTERS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,16 +15,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ ROUTERS
+# ✅ Routers AFTER middleware
 app.include_router(children.router, prefix="/api/v1")
 app.include_router(assessments.router, prefix="/api/v1")
 
-# ✅ DB INIT
+
 @app.on_event("startup")
 def startup():
     init_db()
 
-# ✅ HEALTH CHECK
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
